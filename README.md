@@ -13,11 +13,16 @@
 [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
 [![Stripe](https://img.shields.io/badge/Stripe-635BFF?style=for-the-badge&logo=stripe&logoColor=white)](https://stripe.com)
 
+<br />
+
 A complete, production-quality e-commerce platform featuring an integrated **Rust AI Agent** for intelligent product search and automated comment moderation, built with a modern polyglot architecture.
+
+<br />
 
 <img width="2880" height="1342" alt="Home-page" src="https://github.com/user-attachments/assets/b1c83f7b-9b30-4567-a2e2-62f4c3f893ba" />
 
-
+<br />
+<br />
 
 [Features](#-features) · [Architecture](#-architecture) · [Tech Stack](#-tech-stack) · [Getting Started](#-getting-started) · [API Reference](#-api-reference) · [Testing](#-testing)
 
@@ -31,9 +36,10 @@ Watch the complete project walkthrough, including the Rust AI Agent tool-calling
 
 ---
 
-## Features
+## ✨ Features
 
-### Storefront
+### 🛍️ Storefront
+
 - **Product Catalog** — filterable grid with real-time search, category browsing, price range filters, and soft-delete support
 - **Product Detail Pages** — image gallery, stock status, average rating, and verified-purchase reviews
 - **Smart Search** — global Zustand-powered search with live dropdown suggestions across all pages
@@ -41,45 +47,76 @@ Watch the complete project walkthrough, including the Rust AI Agent tool-calling
 - **Secure Checkout** — Stripe Checkout integration; cart only clears after webhook confirms successful payment
 - **Order Tracking** — per-user order history with full status flow (`pending → processing → shipped → delivered → completed`)
 
-### AI Agent (Rust)
+---
+
+### 🤖 AI Agent (Rust)
+
 <br />
+
 <img width="2880" height="1355" alt="Ai-Chat bot" src="https://github.com/user-attachments/assets/330fdfb2-cf66-4e56-b2a4-b11d70f01f7b" />
+
 <br />
+<br />
+
 - **Intelligent Chatbot** — powered by Ollama LLaMA 3.2 via the Rig framework; instant fast-path responses for common phrases with zero LLM latency
 - **Product Search Tool** — agent calls the GraphQL backend in real-time to answer stock and price queries
 - **Comment Moderation** — automated review pipeline with three-tier decisions: `approved`, `rejected`, `pending`
 - **Scam Detection** — fast-reject layer catches Egyptian phone numbers (01x), WhatsApp references, and external links before hitting the LLM
 - **Admin Review Queue** — borderline comments flagged as `pending` route to the admin dashboard for manual approval
 
-### Content & SEO
+---
+
+### 📝 Content & SEO
+
 <br />
+
 <img width="2880" height="1349" alt="SEO % Articles" src="https://github.com/user-attachments/assets/c3fe1e8c-2857-438f-85a0-d2a7f0353fda" />
+
 <br />
+<br />
+
 - **Blog / Articles System** — full CMS with Markdown support, DOMPurify sanitization, and ISR (1-hour revalidation)
 - **Dynamic Sitemap** — auto-generated XML covering products, categories, and articles
 - **Schema.org Markup** — `BlogPosting` and `CollectionPage` structured data for rich search snippets
 - **Per-page Metadata** — `generateMetadata` on all dynamic routes with Open Graph and canonical URLs
 - **robots.txt** — GPTBot and crawler rules with sitemap pointer
 
-### Admin Dashboard
+---
+
+### ⚙️ Admin Dashboard
+
 <br />
+
 <img width="2880" height="1342" alt="Admin-Dashboard" src="https://github.com/user-attachments/assets/7196db2a-243b-4c7d-b24a-c7badfac5aa7" />
+
 <br />
+<br />
+
 - **Product CRUD** — create / edit / delete with UploadThing image upload (admin-only middleware)
 - **Category Management** — slug-based categories with product-count badges
 - **Order Management** — status updates with automatic delivery-notification triggers
 - **Comment Moderation Queue** — review AI-flagged comments with one-click approve / reject
 - **Analytics** — order and revenue overview with Recharts visualizations
 
-### Notifications & Reviews
+---
+
+### 🔔 Notifications & Reviews
+
 <br />
+
 <img width="2880" height="1340" alt="Popup-notification" src="https://github.com/user-attachments/assets/e6c2d3b4-b018-42cc-84b3-a0f1e7fa65b2" />
+
 <br />
+<br />
+
 - **Delivery Notifications** — automatically created when admin marks order as `delivered`
 - **Review Prompts** — modal popup with star rating, verified-purchase gate, and `localStorage` dismiss state
 - **AI Moderation** — every review passes through the Rust agent before being saved to the database
 
-### Authentication & Security
+---
+
+### 🔐 Authentication & Security
+
 - **Clerk Auth** — JWT Bearer token + cookie-session fallback with lazy user sync to PostgreSQL
 - **RBAC** — `admin` / `user` roles enforced at the GraphQL resolver layer
 - **Purchase Verification** — comments only allowed on `delivered` / `completed` orders
@@ -87,7 +124,7 @@ Watch the complete project walkthrough, including the Rust AI Agent tool-calling
 
 ---
 
-## Architecture
+## 🏗️ Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -113,7 +150,7 @@ Watch the complete project walkthrough, including the Rust AI Agent tool-calling
                     └─────────────┘
 ```
 
-### Comment Moderation Flow
+### 🛡️ Comment Moderation Flow
 
 ```
 User submits review
@@ -133,9 +170,13 @@ pending   → save with status=pending, admin notified 🔔
 Admin Dashboard → approve / reject manually
 ```
 
-### Cart & Payment Flow
+### 💳 Cart & Payment Flow
+
 <br />
+
 <img width="2880" height="1344" alt="cart" src="https://github.com/user-attachments/assets/00a58b01-c937-4f3d-97aa-552dcb47469a" />
+
+<br />
 <br />
 
 ```
@@ -154,7 +195,7 @@ User cancels → redirect to /cart  (items preserved ✅)
 
 ---
 
-## Tech Stack
+## 🧰 Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
@@ -166,13 +207,13 @@ User cancels → redirect to /cart  (items preserved ✅)
 | **Auth** | Clerk — JWT + sessions, RBAC |
 | **Payments** | Stripe Checkout + Webhooks |
 | **File Storage** | UploadThing — admin-only image uploads |
-| **Testing** | Playwright E2E |
+| **Testing** | Playwright E2E, Rust unit tests |
 | **Infrastructure** | Docker, Docker Compose |
 | **SEO** | Next.js Metadata API, Schema.org, ISR, Dynamic Sitemap |
 
 ---
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 prime-pick/
@@ -227,7 +268,7 @@ prime-pick/
 
 ---
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
@@ -313,7 +354,7 @@ cargo run -- --quick "laptop"
 
 ---
 
-## API Reference
+## 📡 API Reference
 
 ### GraphQL — `POST /graphql`
 
@@ -362,7 +403,7 @@ markNotificationAsRead(id: ID!): Notification!
 
 ---
 
-## Testing
+## 🧪 Testing
 
 ```bash
 # Run all Playwright E2E tests
@@ -389,26 +430,31 @@ cargo test
 
 ---
 
-## Key Design Decisions
+## 💡 Key Design Decisions
 
 **Why Rust for the AI Agent?**
+
 Rust provides memory safety and near-zero overhead for the always-on HTTP server. The Rig framework enables clean tool-calling abstractions with Ollama. Running the agent as a separate service means LLM latency (20–40s) never blocks the Node.js event loop.
 
 **Why GraphQL over REST?**
+
 GraphQL eliminates over-fetching on product detail pages (comments, category, user in one query) and enables the Rust agent's `ProductSearchTool` to request exactly the fields it needs with a single POST.
 
 **Why soft delete for products?**
+
 Order history must reference original product data. Hard deletion would break order-item joins and historical pricing. `deletedAt` keeps the data while hiding it from all public queries via `isNull(products.deletedAt)` filters.
 
 **Why cart clearing in the webhook — not the frontend?**
+
 Clearing the cart before payment confirmation causes data loss if the user's bank declines or the browser crashes mid-redirect. The Stripe `checkout.session.completed` webhook is the only reliable signal that money actually moved.
 
 **Why double-check moderation (frontend + backend)?**
+
 Frontend moderation provides fast UX feedback and saves a round-trip. Backend re-moderation in the GraphQL resolver prevents direct API bypass (Postman, Apollo Sandbox, curl). Security must live server-side.
 
 ---
 
-## License
+## 📄 License
 
 MIT © 2026 Ahmed Hawash
 
@@ -418,6 +464,6 @@ MIT © 2026 Ahmed Hawash
 
 Built with ❤️ in Cairo, Egypt
 
-**[GitHub](https://github.com/AhmedHawash321)** · **[LinkedIn](https://linkedin.com/in/ahmed-hawash)**
+**[GitHub](https://github.com/AhmedHawash321)** · **[LinkedIn](https://www.linkedin.com/in/ahmed-hawash-21b992149/)**
 
 </div>

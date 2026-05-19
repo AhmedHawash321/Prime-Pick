@@ -15,7 +15,8 @@
 
 A complete, production-quality e-commerce platform featuring an integrated **Rust AI Agent** for intelligent product search and automated comment moderation, built with a modern polyglot architecture.
 
-<img width="2880" height="1361" alt="Home-Page" src="https://github.com/user-attachments/assets/0e794791-c91a-4d31-bc2d-94cfc743c825" />
+<img width="2880" height="1342" alt="Home-page" src="https://github.com/user-attachments/assets/b1c83f7b-9b30-4567-a2e2-62f4c3f893ba" />
+
 
 
 [Features](#-features) · [Architecture](#-architecture) · [Tech Stack](#-tech-stack) · [Getting Started](#-getting-started) · [API Reference](#-api-reference) · [Testing](#-testing)
@@ -54,6 +55,7 @@ Watch the complete project walkthrough, including the Rust AI Agent tool-calling
 
 <img width="2880" height="1349" alt="SEO % Articles" src="https://github.com/user-attachments/assets/c3fe1e8c-2857-438f-85a0-d2a7f0353fda" />
 
+
 - **Blog / Articles System** — full CMS with Markdown support, DOMPurify sanitization, and ISR (1-hour revalidation)
 - **Dynamic Sitemap** — auto-generated XML covering products, categories, and articles
 - **Schema.org Markup** — `BlogPosting` and `CollectionPage` structured data for rich search snippets
@@ -62,7 +64,8 @@ Watch the complete project walkthrough, including the Rust AI Agent tool-calling
 
 ### Admin Dashboard
 
-<img width="2880" height="1524" alt="Admin-Dashboard" src="https://github.com/user-attachments/assets/3aa30692-1d9d-49cf-950e-43ab6d82f48d" />
+<img width="2880" height="1342" alt="Admin-Dashboard" src="https://github.com/user-attachments/assets/7196db2a-243b-4c7d-b24a-c7badfac5aa7" />
+
 
 - **Product CRUD** — create / edit / delete with UploadThing image upload (admin-only middleware)
 - **Category Management** — slug-based categories with product-count badges

@@ -316,7 +316,7 @@ RUST_LOG=info
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/AhmedHawash321/prime-pick.git
+git clone https://github.com/AhmedHawash321/Prime-Pick.git
 cd prime-pick
 
 # 2. Start backend + Redis

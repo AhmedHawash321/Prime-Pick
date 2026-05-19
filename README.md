@@ -1,340 +1,398 @@
-# 🛒 Product Store Backend
+<div align="center">
 
-A production-ready **GraphQL API** for a full-featured e-commerce platform — built with Node.js, TypeScript, and a modern backend stack including authentication, payments, rate limiting, and containerization.
+# PRIME-PICK
 
+### Production-Grade Full-Stack E-Commerce Platform
+
+[![Next.js](https://img.shields.io/badge/Next.js_15-black?style=for-the-badge&logo=next.js)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![GraphQL](https://img.shields.io/badge/GraphQL-E10098?style=for-the-badge&logo=graphql&logoColor=white)](https://graphql.org)
+[![Rust](https://img.shields.io/badge/Rust-000000?style=for-the-badge&logo=rust&logoColor=white)](https://rust-lang.org)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://postgresql.org)
+[![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
+[![Stripe](https://img.shields.io/badge/Stripe-635BFF?style=for-the-badge&logo=stripe&logoColor=white)](https://stripe.com)
+
+A complete, production-quality e-commerce platform featuring an integrated **Rust AI Agent** for intelligent product search and automated comment moderation, built with a modern polyglot architecture.
+
+[Features](#-features) · [Architecture](#-architecture) · [Tech Stack](#-tech-stack) · [Getting Started](#-getting-started) · [API Reference](#-api-reference) · [Testing](#-testing)
+
+</div>
 
 ---
 
-## ✨ Features
+## Features
 
-- 🔐 **JWT Authentication** via Clerk with role-based access control (Admin / User)
-- 🛍️ **Product Management** — create, update, delete with ownership protection
-- 🔍 **Search & Filtering** — full-text search, price range, pagination & offset
-- 🛒 **Cart System** — add, remove, clear with per-user ownership validation
-- 💳 **Stripe Checkout** — session creation with webhook-driven order fulfillment
-- 📦 **Order Management** — automatic status updates (`pending` → `completed`) via webhooks
-- 🚦 **Redis Rate Limiting** — 100 requests per 15 minutes per IP
-- 🐳 **Docker** — fully containerized for consistent environments
-- 🧪 **Integration Tests** — Vitest + Supertest covering auth and rate limiting
-- 📉 **DB Indexes** — optimized queries on `title`, `price`, and `userId`
-- 🔄 **Graceful Shutdown** — handles `SIGTERM`/`SIGINT` with connection cleanup
+### Storefront
+- **Product Catalog** — filterable grid with real-time search, category browsing, price range filters, and soft-delete support
+- **Product Detail Pages** — image gallery, stock status, average rating, and verified-purchase reviews
+- **Smart Search** — global Zustand-powered search with live dropdown suggestions across all pages
+- **Shopping Cart** — real-time sync with stock validation, quantity controls, and upsert logic
+- **Secure Checkout** — Stripe Checkout integration; cart only clears after webhook confirms successful payment
+- **Order Tracking** — per-user order history with full status flow (`pending → processing → shipped → delivered → completed`)
+
+### AI Agent (Rust)
+- **Intelligent Chatbot** — powered by Ollama LLaMA 3.2 via the Rig framework; instant fast-path responses for common phrases with zero LLM latency
+- **Product Search Tool** — agent calls the GraphQL backend in real-time to answer stock and price queries
+- **Comment Moderation** — automated review pipeline with three-tier decisions: `approved`, `rejected`, `pending`
+- **Scam Detection** — fast-reject layer catches Egyptian phone numbers (01x), WhatsApp references, and external links before hitting the LLM
+- **Admin Review Queue** — borderline comments flagged as `pending` route to the admin dashboard for manual approval
+
+### Content & SEO
+- **Blog / Articles System** — full CMS with Markdown support, DOMPurify sanitization, and ISR (1-hour revalidation)
+- **Dynamic Sitemap** — auto-generated XML covering products, categories, and articles
+- **Schema.org Markup** — `BlogPosting` and `CollectionPage` structured data for rich search snippets
+- **Per-page Metadata** — `generateMetadata` on all dynamic routes with Open Graph and canonical URLs
+- **robots.txt** — GPTBot and crawler rules with sitemap pointer
+
+### Admin Dashboard
+- **Product CRUD** — create / edit / delete with UploadThing image upload (admin-only middleware)
+- **Category Management** — slug-based categories with product-count badges
+- **Order Management** — status updates with automatic delivery-notification triggers
+- **Comment Moderation Queue** — review AI-flagged comments with one-click approve / reject
+- **Analytics** — order and revenue overview with Recharts visualizations
+
+### Notifications & Reviews
+- **Delivery Notifications** — automatically created when admin marks order as `delivered`
+- **Review Prompts** — modal popup with star rating, verified-purchase gate, and `localStorage` dismiss state
+- **AI Moderation** — every review passes through the Rust agent before being saved to the database
+
+### Authentication & Security
+- **Clerk Auth** — JWT Bearer token + cookie-session fallback with lazy user sync to PostgreSQL
+- **RBAC** — `admin` / `user` roles enforced at the GraphQL resolver layer
+- **Purchase Verification** — comments only allowed on `delivered` / `completed` orders
+- **Rate Limiting** — Redis-backed sliding window (100 req / 15 min per IP)
 
 ---
 
-## 🧰 Tech Stack
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        CLIENT LAYER                         │
+│   Next.js 15 · Apollo Client 4 · Zustand · DaisyUI/TW      │
+└──────────────────────────┬──────────────────────────────────┘
+                           │ GraphQL / REST
+┌──────────────────────────▼──────────────────────────────────┐
+│                      API LAYER (Node.js)                    │
+│   Express 5 · GraphQL Yoga · Clerk Middleware               │
+│   UploadThing · Stripe Webhook · Redis Rate Limiter         │
+└───────┬──────────────────┬──────────────────────┬───────────┘
+        │ Drizzle ORM       │ Axios proxy           │ Redis
+┌───────▼──────┐    ┌───────▼──────┐    ┌──────────▼─────────┐
+│  PostgreSQL  │    │  Rust Agent  │    │  Redis             │
+│  (Neon)      │    │  Axum 0.8    │    │  Cache + Rate Limit│
+│              │    │  Rig + Ollama│    │  + Sessions        │
+└──────────────┘    └──────┬───────┘    └────────────────────┘
+                           │
+                    ┌──────▼──────┐
+                    │ Ollama LLM  │
+                    │ LLaMA 3.2   │
+                    └─────────────┘
+```
+
+### Comment Moderation Flow
+
+```
+User submits review
+       ↓
+Frontend → POST /api/moderate (Express proxy)
+       ↓
+Rust Agent /moderate endpoint
+       ↓
+Fast-reject check (phone numbers / links / WhatsApp)
+       ↓ (if not fast-rejected)
+LLM analysis — Ollama llama3.2 (temp=0.1)
+       ↓
+approved  → save to DB, visible immediately  ✅
+rejected  → GraphQLError thrown, never saved ❌
+pending   → save with status=pending, admin notified 🔔
+       ↓
+Admin Dashboard → approve / reject manually
+```
+
+### Cart & Payment Flow
+
+```
+Add to Cart → stock validation → upsert with conflict resolution
+       ↓
+Checkout → create DB order (status=pending)
+       ↓
+Stripe Checkout Session created
+       ↓
+User pays → Stripe fires checkout.session.completed webhook
+       ↓
+Webhook handler → update order status + clear cart
+       ↓
+User cancels → redirect to /cart  (items preserved ✅)
+```
+
+---
+
+## Tech Stack
 
 | Layer | Technology |
-|---|---|
-| Runtime | Node.js + TypeScript |
-| API | GraphQL Yoga |
-| Database | PostgreSQL (Neon) + Drizzle ORM |
-| Auth | Clerk (JWT + session claims) |
-| Payments | Stripe Checkout + Webhooks |
-| Cache / Rate Limit | Redis + express-rate-limit |
-| Validation | Zod + drizzle-zod |
-| Testing | Vitest + Supertest |
-| Container | Docker + Docker Compose |
+|-------|-----------|
+| **Frontend** | Next.js 15, TypeScript, Apollo Client 4, Zustand, DaisyUI, Recharts |
+| **Backend** | Node.js, Express 5, GraphQL Yoga, Drizzle ORM |
+| **AI Agent** | Rust, Axum 0.8, Rig 0.36, Ollama (LLaMA 3.2), Tokio |
+| **Database** | PostgreSQL via Neon (serverless) |
+| **Cache** | Redis — rate limiting, product cache, notification cache |
+| **Auth** | Clerk — JWT + sessions, RBAC |
+| **Payments** | Stripe Checkout + Webhooks |
+| **File Storage** | UploadThing — admin-only image uploads |
+| **Testing** | Playwright E2E |
+| **Infrastructure** | Docker, Docker Compose |
+| **SEO** | Next.js Metadata API, Schema.org, ISR, Dynamic Sitemap |
 
 ---
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```
-src/
-├── authorization/
-│   └── context.ts          # Clerk JWT verification + GraphQL context
-├── config/
-│   ├── env.ts              # Typed environment variables
-│   └── roles.ts            # ADMIN / USER role constants
-├── db/
-│   ├── index.ts            # PostgreSQL pool + Drizzle client
-│   ├── schema.ts           # All table definitions + relations
-│   ├── validation.ts       # Zod schemas for all entities
-│   └── queries/
-│       ├── user.queries.ts
-│       ├── product.queries.ts
-│       ├── cart.queries.ts
-│       └── order.queries.ts
-│       └── comment.queries.ts
-│       └── index.ts
-├── graphql/
-│   ├── resolvers/
-│   │   ├── user.resolver.ts
-│   │   ├── product.resolver.ts
-│   │   ├── comment.resolver.ts
-│   │   ├── cart.resolver.ts
-│   │   └── order.resolver.ts
-│   │   └── index.ts
-│   └── typedefs/
-│       ├── user.schema.ts
-│       ├── product.schema.ts
-│       ├── comment.schema.ts
-│       ├── cart.schema.ts
-│       └── order.schema.ts
-│       └── index.ts
-├── middleware/
-│   └── services/
-│       └── stripe.service.ts
-├── __test__/
-│   ├── cart.test.ts
-│   └── rateLimit.test.ts
-└── server.ts
+prime-pick/
+├── frontend/                    # Next.js 15 application
+│   ├── src/
+│   │   ├── app/                 # App Router pages
+│   │   │   ├── (store)/         # Public storefront routes
+│   │   │   ├── dashboard/       # Admin dashboard
+│   │   │   ├── api/             # Next.js API routes (chat, moderate)
+│   │   │   ├── checkout/        # Stripe checkout flow
+│   │   │   └── articles/        # Blog system
+│   │   ├── components/          # Reusable UI components
+│   │   │   ├── ChatWidget.tsx
+│   │   │   ├── NotificationPopup.tsx
+│   │   │   ├── ReviewPopup.tsx
+│   │   │   └── SearchModal.tsx
+│   │   ├── context/             # React contexts (ChatContext)
+│   │   ├── graphql/             # GQL queries and mutations
+│   │   ├── store/               # Zustand stores (cart, search)
+│   │   └── lib/                 # Apollo client, UploadThing
+│   └── tests/                   # Playwright E2E tests
+│
+├── backend/                     # Node.js + Express API
+│   ├── src/
+│   │   ├── db/
+│   │   │   ├── schema.ts        # Drizzle schema — all tables + relations
+│   │   │   ├── validation.ts    # Zod schemas
+│   │   │   └── queries/         # Database query functions
+│   │   ├── graphql/
+│   │   │   ├── typedefs/        # GraphQL type definitions
+│   │   │   └── resolvers/       # Resolver implementations
+│   │   ├── authorization/       # Clerk context + RBAC
+│   │   ├── middleware/
+│   │   │   └── services/        # Stripe service
+│   │   ├── uploadthing/         # File router — admin-only
+│   │   ├── lib/                 # Shared Redis client
+│   │   └── server.ts            # Express app + all middleware
+│   └── drizzle/                 # Database migrations
+│
+├── ai-chat-service/             # Rust AI Agent
+│   ├── src/
+│   │   ├── main.rs              # CLI + HTTP server dual mode
+│   │   ├── server.rs            # Axum HTTP server
+│   │   ├── agent.rs             # ProductAgent (search + fast-path)
+│   │   ├── moderator.rs         # Comment moderation engine
+│   │   ├── tools.rs             # Rig tools (product search)
+│   │   └── config.rs            # Environment configuration
+│   └── Cargo.toml
+│
+└── docker-compose.yml           # Backend + Redis orchestration
 ```
 
 ---
 
-## 🔒 Authorization Model
-
-Every protected mutation verifies **authentication first**, then **authorization**:
-
-```
-Request → Clerk JWT verified → userId extracted from context
-       → Ownership check (productData.userId === context.userId)
-       → Admin bypass (context.role === "admin")
-       → DB operation
-```
-
-| Action | Who can do it |
-|--------|--------------|
-| Create product | Authenticated users |
-| Update product | Owner or Admin |
-| Delete product | Owner or Admin |
-| View cart | Cart owner only |
-| Checkout | Authenticated users |
-
----
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
 - Node.js 20+
-- Docker & Docker Compose
-- PostgreSQL (or Neon account)
-- Redis
-- Clerk account
-- Stripe account
+- Rust 1.75+ (`rustup`)
+- Docker + Docker Compose
+- Ollama — `ollama serve` and `ollama pull llama3.2`
+- Accounts: Clerk, Stripe, Neon, UploadThing
 
-### 1. Clone & Install
+### Environment Variables
 
-```bash
-git clone https://github.com/AhmedHawash321/product-store-backend
-cd product-store-backend
-npm install
-```
-
-### 2. Environment Variables
-
-Create a `.env` file:
-
+**`backend/.env`**
 ```env
 PORT=5000
-DATABASE_URL=postgresql://...
+FRONTEND_URL=http://localhost:3000
+DATABASE_URL=postgresql://...neon.tech/neondb?sslmode=require
 CLERK_SECRET_KEY=sk_test_...
 STRIPE_SECRET_KEY=sk_test_...
 STRIPE_WEBHOOK_SECRET=whsec_...
-FRONTEND_URL=http://localhost:3000
-REDIS_URL=redis://localhost:6379
+UPLOADTHING_TOKEN=...
+REDIS_URL=redis://redis:6379
+AI_AGENT_URL=http://localhost:8080
 ```
 
-### 3. Push DB Schema
-
-```bash
-npm run db:push
+**`frontend/.env.local`**
+```env
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_API_URL=http://localhost:5000/graphql
+AI_AGENT_URL=http://localhost:8080
+BACKEND_URL=http://localhost:5000
 ```
 
-### 4. Run Locally
-
-```bash
-npm run dev
+**`ai-chat-service/.env`**
+```env
+BACKEND_API_URL=http://localhost:5000/graphql
+OLLAMA_MODEL=llama3.2
+OLLAMA_API_BASE_URL=http://localhost:11434
+TEMPERATURE=0.3
+MAX_PRODUCT_RESULTS=5
+RUST_LOG=info
 ```
 
-### 5. Run with Docker
+### Installation
 
 ```bash
+# 1. Clone the repository
+git clone https://github.com/AhmedHawash321/prime-pick.git
+cd prime-pick
+
+# 2. Start backend + Redis
+cd backend
 docker compose up --build
+
+# 3. Apply database migrations
+npx drizzle-kit push
+
+# 4. Apply comment moderation migration (Neon SQL Editor)
+# ALTER TABLE comments ADD COLUMN IF NOT EXISTS status text NOT NULL DEFAULT 'approved';
+# ALTER TABLE comments ADD COLUMN IF NOT EXISTS moderation_reason text;
+
+# 5. Start the frontend
+cd ../frontend
+npm install && npm run dev
+
+# 6. Start the Rust AI Agent
+cd ../ai-chat-service
+cargo run -- --server
 ```
-<img width="2174" height="1524" alt="Screenshot 2026-04-05 170706" src="https://github.com/user-attachments/assets/3a03e057-6e50-460a-88b5-1b1e4930760d" />
 
----
-
-## 🧪 Testing
+### Running Modes — Rust Agent
 
 ```bash
-# Run all tests
-npm run test
+# HTTP server mode (for production use)
+cargo run -- --server
 
-# Run once (CI mode)
-npm run test:run
+# CLI mode (for quick testing)
+cargo run -- "show me fridges"
 
-# Interactive UI
-npm run test:ui
-```
-
-**Test coverage includes:**
-- Rate limiter — allows N requests, blocks the N+1st
-- Cart total calculation logic
-<img width="1452" height="1355" alt="Screenshot 2026-04-05 201203" src="https://github.com/user-attachments/assets/673eebf1-5140-4c18-a86b-7d65ec9aeb5a" />
-
----
-
-## 📡 GraphQL API Examples
-
-### Sync User (called on login)
-```graphql
-mutation {
-  syncUser(input: {
-    id: "user_xxx"
-    email: "ahmed@example.com"
-    name: "Ahmed"
-  }) {
-    id
-    email
-  }
-}
-```
-
-### Get Products (with search + pagination)
-```graphql
-query {
-  getProducts(limit: 10, offset: 0, filter: { search: "MacBook", minPrice: 1000 }) {
-    id
-    title
-    price
-    stock
-    user { name }
-  }
-}
-```
-
-### Create Product (Auth required)
-```graphql
-mutation {
-  createProduct(input: {
-    title: "MacBook Pro M3"
-    description: "Apple M3 Chip with 16GB RAM"
-    price: 2500
-    imageUrl: "https://example.com/macbook.jpg"
-    stock: 10
-  }) {
-    id
-    title
-  }
-}
-```
-<img width="2880" height="1524" alt="Screenshot 2026-04-03 1854512" src="https://github.com/user-attachments/assets/fbd4f620-12ec-4c00-bfe4-a98809c7c472" />
-
-
-### Add to Cart (Auth required)
-```graphql
-mutation {
-  addToCart(input: { productId: "uuid-here", quantity: 2 }) {
-    id
-    quantity
-  }
-}
-```
-<img width="2880" height="1524" alt="Screenshot 2026-04-04 154746" src="https://github.com/user-attachments/assets/f038f587-7c3e-4346-98ad-73c42199cdc1" />
-
-
-### Checkout (Auth required)
-```graphql
-mutation {
-  createCheckoutSession {
-    url
-  }
-}
-```
-
-> **Authentication:** Pass `Authorization: Bearer <clerk_token>` in request headers.
-
----
-## 💳 Stripe Checkout & Order Lifecycle
-
-Every order goes through a strict state transition to ensure payment integrity, managed securely via Stripe webhooks and database transactions.
-
-### 1. Initiate Payment (Client to API)
-The user initiates checkout by calling the `createCheckoutSession` mutation. This prepares a temporary order and returns a secure Stripe Checkout URL.
-
-```graphql
-mutation {
-  createCheckoutSession {
-    # 🔗 Secure Stripe redirect URL for payment
-    url
-  }
-}
-```
-<img width="2386" height="1372" alt="Screenshot 2026-04-05 102401" src="https://github.com/user-attachments/assets/66c6744d-4885-4eb3-9de2-9ef789be1113" />
-
----
-
-## ⚙️ Stripe Webhook Flow
-
-```
-User completes payment on Stripe
-        ↓
-Stripe sends POST /webhook/stripe
-        ↓
-Backend verifies signature (STRIPE_WEBHOOK_SECRET)
-        ↓
-checkout.session.completed event received
-        ↓
-Order status updated: pending → completed
-        ↓
-Cart cleared automatically
-```
-<img width="1208" height="1225" alt="Screenshot 2026-04-05 102935" src="https://github.com/user-attachments/assets/e5c62bb5-4ac8-47db-929a-5802fa139531" />
-
----
-
-## 🐳 Docker Setup
-
-```yaml
-# docker-compose.yml
-services:
-  app:
-    build: .
-    ports:
-      - "5000:5000"
-    environment:
-      - NODE_ENV=production
-      - REDIS_URL=redis://redis:6379
-    depends_on:
-      - redis
-
-  redis:
-    image: redis:alpine
-    ports:
-      - "6379:6379"
+# Fast search mode (no LLM)
+cargo run -- --quick "laptop"
 ```
 
 ---
 
-## 📊 Database Schema
+## API Reference
 
-```
-users ──────────────────────────────────────────┐
-  │                                              │
-  ├──< products >──< comments                   │
-  │       │                                      │
-  │       └──< cartItems                         │
-  │       └──< orderItems                        │
-  │                                              │
-  └──< orders >──< orderItems                   │
+### GraphQL — `POST /graphql`
+
+All authenticated operations require `Authorization: Bearer <token>`.
+
+**Queries**
+```graphql
+getProducts(limit: Int, offset: Int, filter: ProductFilterInput): [Product]
+getProductById(id: ID!): Product
+getCategories(search: String): [Category]
+getCategoryBySlug(slug: String!): Category
+getArticles(search: String): [Article!]!
+getMyOrders: [Order]
+getMyNotifications(limit: Int): [Notification!]!
+getPendingComments: [Comment!]!          # Admin only
 ```
 
-**Indexes:** `title_idx`, `price_idx`, `user_product_idx` for optimized filtering and search queries.
+**Mutations**
+```graphql
+createProduct(input: CreateProductInput!): Product       # Admin only
+createCheckoutSession: CheckoutSession
+createComment(input: CreateCommentInput!): Comment       # Verified purchase required
+approveComment(id: ID!): Comment!                        # Admin only
+rejectComment(id: ID!, reason: String): Comment!         # Admin only
+updateOrderStatus(orderId: ID!, status: String!): Order  # Admin only
+markNotificationAsRead(id: ID!): Notification!
+```
+
+### REST Endpoints (Express)
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/api/chat` | Proxy to Rust AI chatbot |
+| `POST` | `/api/moderate` | Proxy to Rust comment moderation |
+| `POST` | `/api/webhook` | Stripe payment webhook |
+| `POST` | `/api/uploadthing` | UploadThing file handler (admin) |
+| `GET`  | `/health` | Health check |
+
+### Rust Agent Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/chat` | AI chat — accepts `{ message, user_id? }` |
+| `POST` | `/moderate` | Comment moderation — returns `approved` / `rejected` / `pending` |
+| `GET`  | `/health` | Health check |
 
 ---
 
-## 👨‍💻 Author
+## Testing
 
-**Ahmed Hawash**
-Backend Engineer · Node.js & Rust · Blockchain Developer
+```bash
+# Run all Playwright E2E tests
+cd frontend
+npx playwright test
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Ahmed_Hawash-blue?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/ahmed-hawash-21b992149/)
-[![GitHub](https://img.shields.io/badge/GitHub-AhmedHawash321-black?style=for-the-badge&logo=github)](https://github.com/AhmedHawash321)
+# Open Playwright UI with trace viewer
+npx playwright test --ui
 
-## 📄 License
+# Run Rust unit tests
+cd ai-chat-service
+cargo test
+```
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+**Playwright test suite covers:**
+- Chat widget message persistence across page navigation (ChatContext)
+- AI assistant response rendering with `data-testid` selectors
+
+**Rust unit tests cover:**
+- Comment moderation fast-reject (phone numbers, WhatsApp, external links)
+- LLM response JSON parsing and edge cases (low confidence, malformed JSON)
+- Config validation (temperature range, empty model, zero results)
+- Instant-response fast-path matching (greetings, thanks, Arabic phrases)
+
+---
+
+## Key Design Decisions
+
+**Why Rust for the AI Agent?**
+Rust provides memory safety and near-zero overhead for the always-on HTTP server. The Rig framework enables clean tool-calling abstractions with Ollama. Running the agent as a separate service means LLM latency (20–40s) never blocks the Node.js event loop.
+
+**Why GraphQL over REST?**
+GraphQL eliminates over-fetching on product detail pages (comments, category, user in one query) and enables the Rust agent's `ProductSearchTool` to request exactly the fields it needs with a single POST.
+
+**Why soft delete for products?**
+Order history must reference original product data. Hard deletion would break order-item joins and historical pricing. `deletedAt` keeps the data while hiding it from all public queries via `isNull(products.deletedAt)` filters.
+
+**Why cart clearing in the webhook — not the frontend?**
+Clearing the cart before payment confirmation causes data loss if the user's bank declines or the browser crashes mid-redirect. The Stripe `checkout.session.completed` webhook is the only reliable signal that money actually moved.
+
+**Why double-check moderation (frontend + backend)?**
+Frontend moderation provides fast UX feedback and saves a round-trip. Backend re-moderation in the GraphQL resolver prevents direct API bypass (Postman, Apollo Sandbox, curl). Security must live server-side.
+
+---
+
+## License
+
+MIT © 2026 Ahmed Hawash
+
+---
+
+<div align="center">
+
+Built with ❤️ in Cairo, Egypt
+
+**[GitHub](https://github.com/AhmedHawash321)** · **[LinkedIn](https://linkedin.com/in/ahmed-hawash)**
+
+</div>

@@ -1,0 +1,46 @@
+{
+  // Visit https://aka.ms/tsconfig to read more about this file
+  "compilerOptions": {
+    // File Layout
+    // rootDir is set to "./" to include drizzle.config.ts and src folder together
+    "rootDir": "./",
+    "outDir": "./dist",
+
+    // Environment Settings
+    "module": "NodeNext",
+    "target": "Esnext",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,
+    "lib": ["ESNext"],
+    "types": ["node"],
+
+    // Other Outputs
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+
+    // Stricter Typechecking Options
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+
+    // Style Options
+    "allowSyntheticDefaultImports": true,
+    
+    // Recommended Options
+    "strict": true,
+    "jsx": "react-jsx",
+    "isolatedModules": true,
+    "noUncheckedSideEffectImports": true,
+    "moduleDetection": "force",
+    "skipLibCheck": true,
+
+    // Modern Path Mapping (No baseUrl needed)
+    // Maps imports to the src directory correctly within the project root
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  // Explicitly include the schema config and all source files
+  "include": ["src/**/*", "drizzle.config.ts"],
+  "exclude": ["node_modules", "dist"]
+}

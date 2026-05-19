@@ -74,14 +74,14 @@ Watch the complete project walkthrough, including the Rust AI Agent tool-calling
 - **Analytics** — order and revenue overview with Recharts visualizations
 
 ### Notifications & Reviews
+
+<img width="2880" height="1340" alt="Popup-notification" src="https://github.com/user-attachments/assets/e6c2d3b4-b018-42cc-84b3-a0f1e7fa65b2" />
+
 - **Delivery Notifications** — automatically created when admin marks order as `delivered`
 - **Review Prompts** — modal popup with star rating, verified-purchase gate, and `localStorage` dismiss state
 - **AI Moderation** — every review passes through the Rust agent before being saved to the database
 
 ### Authentication & Security
-
-<img width="2880" height="1340" alt="Popup-notification" src="https://github.com/user-attachments/assets/e6c2d3b4-b018-42cc-84b3-a0f1e7fa65b2" />
-
 - **Clerk Auth** — JWT Bearer token + cookie-session fallback with lazy user sync to PostgreSQL
 - **RBAC** — `admin` / `user` roles enforced at the GraphQL resolver layer
 - **Purchase Verification** — comments only allowed on `delivered` / `completed` orders

@@ -42,9 +42,9 @@ Watch the complete project walkthrough, including the Rust AI Agent tool-calling
 - **Order Tracking** — per-user order history with full status flow (`pending → processing → shipped → delivered → completed`)
 
 ### AI Agent (Rust)
-
+<br />
 <img width="2880" height="1355" alt="Ai-Chat bot" src="https://github.com/user-attachments/assets/330fdfb2-cf66-4e56-b2a4-b11d70f01f7b" />
-
+<br />
 - **Intelligent Chatbot** — powered by Ollama LLaMA 3.2 via the Rig framework; instant fast-path responses for common phrases with zero LLM latency
 - **Product Search Tool** — agent calls the GraphQL backend in real-time to answer stock and price queries
 - **Comment Moderation** — automated review pipeline with three-tier decisions: `approved`, `rejected`, `pending`
@@ -52,10 +52,9 @@ Watch the complete project walkthrough, including the Rust AI Agent tool-calling
 - **Admin Review Queue** — borderline comments flagged as `pending` route to the admin dashboard for manual approval
 
 ### Content & SEO
-
+<br />
 <img width="2880" height="1349" alt="SEO % Articles" src="https://github.com/user-attachments/assets/c3fe1e8c-2857-438f-85a0-d2a7f0353fda" />
-
-
+<br />
 - **Blog / Articles System** — full CMS with Markdown support, DOMPurify sanitization, and ISR (1-hour revalidation)
 - **Dynamic Sitemap** — auto-generated XML covering products, categories, and articles
 - **Schema.org Markup** — `BlogPosting` and `CollectionPage` structured data for rich search snippets
@@ -63,10 +62,9 @@ Watch the complete project walkthrough, including the Rust AI Agent tool-calling
 - **robots.txt** — GPTBot and crawler rules with sitemap pointer
 
 ### Admin Dashboard
-
+<br />
 <img width="2880" height="1342" alt="Admin-Dashboard" src="https://github.com/user-attachments/assets/7196db2a-243b-4c7d-b24a-c7badfac5aa7" />
-
-
+<br />
 - **Product CRUD** — create / edit / delete with UploadThing image upload (admin-only middleware)
 - **Category Management** — slug-based categories with product-count badges
 - **Order Management** — status updates with automatic delivery-notification triggers
@@ -74,9 +72,9 @@ Watch the complete project walkthrough, including the Rust AI Agent tool-calling
 - **Analytics** — order and revenue overview with Recharts visualizations
 
 ### Notifications & Reviews
-
+<br />
 <img width="2880" height="1340" alt="Popup-notification" src="https://github.com/user-attachments/assets/e6c2d3b4-b018-42cc-84b3-a0f1e7fa65b2" />
-
+<br />
 - **Delivery Notifications** — automatically created when admin marks order as `delivered`
 - **Review Prompts** — modal popup with star rating, verified-purchase gate, and `localStorage` dismiss state
 - **AI Moderation** — every review passes through the Rust agent before being saved to the database
@@ -136,9 +134,9 @@ Admin Dashboard → approve / reject manually
 ```
 
 ### Cart & Payment Flow
-
+<br />
 <img width="2880" height="1344" alt="cart" src="https://github.com/user-attachments/assets/00a58b01-c937-4f3d-97aa-552dcb47469a" />
-
+<br />
 
 ```
 Add to Cart → stock validation → upsert with conflict resolution

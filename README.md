@@ -21,6 +21,12 @@ A complete, production-quality e-commerce platform featuring an integrated **Rus
 
 ---
 
+## 📺 Live Demo
+
+Watch the complete project walkthrough, including the Rust AI Agent tool-calling, automated moderation flow, and system architecture explanation on **[LinkedIn](https://www.linkedin.com/posts/ahmed-hawash-21b992149_rust-nodejs-typescript-activity-7460587764711833600-TLWq?utm_source=share&utm_medium=member_desktop&rcm=ACoAACPrI7cBGWtDBaEdsNsnYRuAwN7ujeZGHsE)**.
+
+---
+
 ## Features
 
 ### Storefront

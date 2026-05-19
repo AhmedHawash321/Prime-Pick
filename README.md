@@ -15,6 +15,9 @@
 
 A complete, production-quality e-commerce platform featuring an integrated **Rust AI Agent** for intelligent product search and automated comment moderation, built with a modern polyglot architecture.
 
+<img width="2880" height="1361" alt="Home-Page" src="https://github.com/user-attachments/assets/0e794791-c91a-4d31-bc2d-94cfc743c825" />
+
+
 [Features](#-features) · [Architecture](#-architecture) · [Tech Stack](#-tech-stack) · [Getting Started](#-getting-started) · [API Reference](#-api-reference) · [Testing](#-testing)
 
 </div>
@@ -38,6 +41,9 @@ Watch the complete project walkthrough, including the Rust AI Agent tool-calling
 - **Order Tracking** — per-user order history with full status flow (`pending → processing → shipped → delivered → completed`)
 
 ### AI Agent (Rust)
+
+<img width="2880" height="1355" alt="Ai-Chat bot" src="https://github.com/user-attachments/assets/330fdfb2-cf66-4e56-b2a4-b11d70f01f7b" />
+
 - **Intelligent Chatbot** — powered by Ollama LLaMA 3.2 via the Rig framework; instant fast-path responses for common phrases with zero LLM latency
 - **Product Search Tool** — agent calls the GraphQL backend in real-time to answer stock and price queries
 - **Comment Moderation** — automated review pipeline with three-tier decisions: `approved`, `rejected`, `pending`
@@ -45,6 +51,9 @@ Watch the complete project walkthrough, including the Rust AI Agent tool-calling
 - **Admin Review Queue** — borderline comments flagged as `pending` route to the admin dashboard for manual approval
 
 ### Content & SEO
+
+<img width="2880" height="1349" alt="SEO % Articles" src="https://github.com/user-attachments/assets/c3fe1e8c-2857-438f-85a0-d2a7f0353fda" />
+
 - **Blog / Articles System** — full CMS with Markdown support, DOMPurify sanitization, and ISR (1-hour revalidation)
 - **Dynamic Sitemap** — auto-generated XML covering products, categories, and articles
 - **Schema.org Markup** — `BlogPosting` and `CollectionPage` structured data for rich search snippets
@@ -52,6 +61,9 @@ Watch the complete project walkthrough, including the Rust AI Agent tool-calling
 - **robots.txt** — GPTBot and crawler rules with sitemap pointer
 
 ### Admin Dashboard
+
+<img width="2880" height="1524" alt="Admin-Dashboard" src="https://github.com/user-attachments/assets/3aa30692-1d9d-49cf-950e-43ab6d82f48d" />
+
 - **Product CRUD** — create / edit / delete with UploadThing image upload (admin-only middleware)
 - **Category Management** — slug-based categories with product-count badges
 - **Order Management** — status updates with automatic delivery-notification triggers
@@ -64,6 +76,9 @@ Watch the complete project walkthrough, including the Rust AI Agent tool-calling
 - **AI Moderation** — every review passes through the Rust agent before being saved to the database
 
 ### Authentication & Security
+
+<img width="2880" height="1340" alt="Popup-notification" src="https://github.com/user-attachments/assets/e6c2d3b4-b018-42cc-84b3-a0f1e7fa65b2" />
+
 - **Clerk Auth** — JWT Bearer token + cookie-session fallback with lazy user sync to PostgreSQL
 - **RBAC** — `admin` / `user` roles enforced at the GraphQL resolver layer
 - **Purchase Verification** — comments only allowed on `delivered` / `completed` orders
@@ -118,6 +133,9 @@ Admin Dashboard → approve / reject manually
 ```
 
 ### Cart & Payment Flow
+
+<img width="2880" height="1344" alt="cart" src="https://github.com/user-attachments/assets/00a58b01-c937-4f3d-97aa-552dcb47469a" />
+
 
 ```
 Add to Cart → stock validation → upsert with conflict resolution

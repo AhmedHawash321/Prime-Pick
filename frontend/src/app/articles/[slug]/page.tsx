@@ -6,7 +6,6 @@ import { notFound } from "next/navigation";
 import { ClockIcon, CalendarIcon, UserIcon, ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 import { Article } from "../page";
-// 1. Import DOMPurify for secure HTML sanitization
 import DOMPurify from "isomorphic-dompurify";
 
 interface ArticlePageProps {

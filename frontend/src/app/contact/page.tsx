@@ -9,7 +9,7 @@ import {
   ArrowLeftIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useChat } from "@/context/ChatContext"; // Import the shared chat hook
+import { useChat } from "@/context/ChatContext";
 
 export default function ContactPage() {
   // Use shared messages and setMessages from ChatContext instead of local state

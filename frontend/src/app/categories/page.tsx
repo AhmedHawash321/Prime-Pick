@@ -7,7 +7,6 @@ import { ArrowRightIcon, LayoutGridIcon, ChevronLeftIcon, ChevronRightIcon, Sear
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useMemo } from "react";
-// Import the shared search store
 import { useSearchStore } from '@/store/searchStore';
 
 interface Category {

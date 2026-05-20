@@ -1,7 +1,6 @@
 import * as notificationQueries from "../../db/queries/notification.queries";
 import { GraphQLError } from "graphql";
 import { GraphQLContext } from "../../authorization/context";
-// Import the centralized Redis client
 import { redisClient } from "../../lib/redis";
 
 /**

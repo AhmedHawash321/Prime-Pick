@@ -2,15 +2,15 @@ import { verifyToken, getAuth } from "@clerk/express";
 import { clerkClient } from "@clerk/express";
 import { ENV } from "../config/env";
 import { db } from "../db";
-import { users, products } from "../db/schema"; // Added products to imports
-import { eq, inArray } from "drizzle-orm"; // Added inArray for batching
+import { users, products } from "../db/schema"; 
+import { eq, inArray } from "drizzle-orm"; 
 import { ROLES, Role } from "../config/roles";
-import DataLoader from "dataloader"; // Import DataLoader library
+import DataLoader from "dataloader"; 
 
 export interface GraphQLContext {
   userId: string | null;
   role: Role;
-  productLoader: DataLoader<string, any>; // Add productLoader to the interface
+  productLoader: DataLoader<string, any>;
 }
 
 async function syncUserAndGetRole(userId: string): Promise<Role> {

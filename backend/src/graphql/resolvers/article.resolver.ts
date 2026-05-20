@@ -8,7 +8,6 @@ import {
 } from "../../db/validation";
 import { ROLES } from "../../config/roles";
 import { GraphQLContext } from "../../authorization/context";
-// Import the centralized Redis client
 import { redisClient } from "../../lib/redis";
 
 /**

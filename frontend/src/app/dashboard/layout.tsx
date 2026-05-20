@@ -10,7 +10,7 @@ import {
   BarChart3Icon,
   LayoutGridIcon,
   FileTextIcon,
-  MessageSquareIcon // Imported for the Pending Comments navigation item
+  MessageSquareIcon
 } from "lucide-react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -22,7 +22,7 @@ const navItems = [
   { href: "/dashboard/products", label: "Products", icon: PackageIcon },
   { href: "/dashboard/categories", label: "Categories", icon: LayoutGridIcon },
   { href: "/dashboard/articles", label: "Articles", icon: FileTextIcon }, 
-  { href: "/dashboard/pending-comments", label: "Comments", icon: MessageSquareIcon }, // Linked to D:\Projects\Product-store\frontend\src\app\dashboard\pending-comments\page.tsx
+  { href: "/dashboard/pending-comments", label: "Comments", icon: MessageSquareIcon }, 
   { href: "/dashboard/orders", label: "Orders", icon: ShoppingCartIcon },
   { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3Icon },
 ];

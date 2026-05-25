@@ -6,7 +6,7 @@ import { redisClient } from "../../lib/redis";
 /**
  * Cache settings
  * NOTIF_CACHE_PREFIX: Ensures user-specific scoping in Redis.
- * CACHE_TTL: Matches frontend polling interval (15s) to reduce DB load.
+ * CACHE_TTL: Matches frontend polling interval (30s) to reduce DB load.
  */
 const NOTIF_CACHE_PREFIX = "notifications:user:";
 const CACHE_TTL = 15; 

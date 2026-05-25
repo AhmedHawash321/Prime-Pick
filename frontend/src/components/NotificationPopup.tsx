@@ -48,7 +48,7 @@ export default function NotificationPopup() {
       skip: !isSignedIn,
       variables: { limit: 5 },
       fetchPolicy: "network-only",
-      // Added pollInterval to check for new notifications every 15 seconds
+      // Added pollInterval to check for new notifications every 30 seconds
       // to avoid manual page refreshes when an order status changes.
       pollInterval: 30000,
     },

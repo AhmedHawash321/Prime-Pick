@@ -120,7 +120,7 @@ Watch the complete project walkthrough, including the Rust AI Agent tool-calling
 - **Clerk Auth** — JWT Bearer token + cookie-session fallback with lazy user sync to PostgreSQL
 - **RBAC** — `admin` / `user` roles enforced at the GraphQL resolver layer
 - **Purchase Verification** — comments only allowed on `delivered` / `completed` orders
-- **Rate Limiting** — Redis-backed sliding window (100 req / 15 min per IP)
+- **Rate Limiting** — Redis-backed sliding window (150 req / 15 min per IP)
 
 ---
 
